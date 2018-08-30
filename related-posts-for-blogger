@@ -19,7 +19,7 @@ Bước 2: Thêm thẻ b:includable
 </div>
 <script>
 var blogID = &quot;<data:blog.blogId/>&quot;;
-var labelname= &quot;<b:loop values='data:post.labels.length - 1' var='label'><b:eval expr='data:post.labels[label].name'/></b:loop>&quot;;
+var labelname= &quot;<b:loop values='data:post.labels.length - 1' var='label'><b:eval expr='data:post.labels[label].name'/></b:loop>&quot;; // Lọc lấy tên Label cuối
 //<![CDATA[
 var postsnum = 10; // Số bài viết cần hiển thị
 var randarray = new Array();
