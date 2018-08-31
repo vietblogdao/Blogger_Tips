@@ -1,0 +1,91 @@
+<html>
+<head>
+<style type='text/css'>
+
+</style>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+</head>
+<body>
+<div id='recent-posts'>
+  <ul class='posts'/>
+  <input class='loadposts' type='button' value='show more'/>
+  <input id='numposts' type='hidden' value='0'/>
+  <input id='allposts' type='hidden' value=''/>
+  <div class='loading spinner hidden'/>
+</div>
+<script>//<![CDATA[
+function recentPosts(e) {
+  if (e.feed.entry) {
+    for (var t = 0; t < e.feed.entry.length; t++) {
+      for (var a = 0; a < e.feed.entry[t].link.length; a++)
+        if ("alternate" == e.feed.entry[t].link[a].rel) {
+          var s = e.feed.entry[t].link[a].href;
+          break
+        }
+      for (var r = 0; r < e.feed.entry[t].category.length; r++) var l = e.feed.entry[t].category[r].term,
+        n = "/search/label/" + l;
+      var i, d = e.feed.entry[t].title.$t,
+        p = e.feed.entry[t].published.$t,
+        c = p.substring(8, 10) + "/" + p.substring(5, 7) + "/" + p.substring(0, 4);
+      try {
+        i = e.feed.entry[t].media$thumbnail.url.replace("s72-c", "s1600")
+      } catch (e) {
+        i = "https://4.bp.blogspot.com/-00O66C-eBQs/W0IcokXSnOI/AAAAAAAAL_k/g4KtDm7SkQsoe7_G0vZ_C_nU0Gf_-kyVQCLcBGAs/s1600/safe_image.png"
+      }
+      $("#recent-posts ul").append('<li class="item"><div class="post-thumb"><a href=' + s + ' title="' + d + '"><img src=' + i + ' alt="' + d + '" /><span class="duration_video" title="Play"><span class="play_ico"><i class="fa fa-play" aria-hidden="true"></i></span></span></a></div><h2 class="post-title"><a href=' + s + ' title="' + d + '">' + d + '</a></h2><div class="post-meta"><span class="post-date">' + c + '</span><span class="post-label"><a href="' + n + '" title="' + l + '">' + l + "</a></span></div></li>")
+    }
+  } else {
+    $('#recent-posts').hide()
+  }
+}
+$(window).on('load', function() {
+  var numposts = 10;
+  $.ajax({
+    type: 'GET',
+    url: '/feeds/posts/summary',
+    data: {
+      'max-results': numposts,
+      'alt': 'json'
+    },
+    dataType: 'jsonp',
+    jsonp: 'callback',
+    jsonpCallback: 'recentPosts',
+    success: function(e) {
+      var totalposts = e.feed.openSearch$totalResults.$t
+      $('#allposts').attr('value', totalposts)
+      $('.recentposts .loadposts').click(function() {
+        $('.loading').removeClass('hidden')
+        var items = Number($('#numposts').val());
+        items = items + numposts;
+        if (items <= totalposts) {
+          $('#numposts').val(items);
+          $.ajax({
+            type: 'GET',
+            url: '/feeds/posts/summary',
+            data: {
+              'max-results': numposts,
+              'start-index': items + 1,
+              'alt': 'json'
+            },
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            jsonpCallback: 'recentPosts',
+            success: function() {
+              var lastposts = items + numposts;
+              if (lastposts > totalposts) {
+                $('.recentposts .loadposts,.loading').addClass('hidden')
+              } else {
+                $('.loading').addClass('hidden')
+              }
+            }
+          })
+        } else {
+          $('.recentposts .loadposts,.loading').addClass('hidden')
+        }
+      })
+    }
+  })
+})
+//]]></script>
+</body>
+</html>
