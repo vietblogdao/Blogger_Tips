@@ -126,7 +126,7 @@ function recentPosts(e) {
       } catch (e) {
         i = "https://4.bp.blogspot.com/-00O66C-eBQs/W0IcokXSnOI/AAAAAAAAL_k/g4KtDm7SkQsoe7_G0vZ_C_nU0Gf_-kyVQCLcBGAs/s1600/safe_image.png"
       }
-      $("#recent-posts ul").append('<li class="item"><div class="post-thumb"><a href=' + s + ' title="' + d + '"><img src=' + i + ' alt="' + d + '" /></a></div><div class="post-title"><a href=' + s + ' title="' + d + '">' + d + '</a></div><div class="post-meta"><span class="post-date">' + c + '</span><span class="post-label"><a href="' + n + '" title="' + l + '">' + l + "</a></span></div></li>")
+      $("#recent-posts ul").append('<li><div class="post-thumb"><a href=' + s + ' title="' + d + '"><img src=' + i + ' alt="' + d + '" /></a></div><div class="post-title"><a href=' + s + ' title="' + d + '">' + d + '</a></div><div class="post-meta"><span class="post-date">' + c + '</span><span class="post-label"><a href="' + n + '" title="' + l + '">' + l + "</a></span></div></li>")
     }
   } else {
     $('#recent-posts').hide()
@@ -147,8 +147,8 @@ $(window).on('load', function() {
     success: function(e) {
       var totalposts = e.feed.openSearch$totalResults.$t
       $('#allposts').attr('value', totalposts)
-      $('.recentposts .loadposts').click(function() {
-        $('.loading').removeClass('hidden')
+      $('#recent-posts .loadposts').click(function() {
+        $('#recent-posts .loading').removeClass('hidden')
         var items = Number($('#numposts').val());
         items = items + numposts;
         if (items <= totalposts) {
@@ -167,14 +167,14 @@ $(window).on('load', function() {
             success: function() {
               var lastposts = items + numposts;
               if (lastposts > totalposts) {
-                $('.recentposts .loadposts,.loading').addClass('hidden')
+                $('#recent-posts .loadposts,#recent-posts .loading').addClass('hidden')
               } else {
-                $('.loading').addClass('hidden')
+                $('#recent-posts .loading').addClass('hidden')
               }
             }
           })
         } else {
-          $('.recentposts .loadposts,.loading').addClass('hidden')
+          $('#recent-posts .loadposts,#recent-posts .loading').addClass('hidden')
         }
       })
     }
