@@ -1,7 +1,67 @@
 <html>
 <head>
 <style type='text/css'>
-
+#recent-posts ul {
+    position: relative;
+    margin: 0 -7.5px;
+    box-sizing: border-box;
+}
+#recent-posts ul li {
+    padding: 0 7.5px 15px 7.5px;
+    width: 20%;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+#recent-posts ul li a, #recent-posts ul li a:hover {
+    color: #333333;  
+}
+#recent-posts .post-thumb {
+    width: 100%;
+    height: 115px;
+    float: left;
+    overflow: hidden;
+    position: relative;
+}
+#recent-posts .post-thumb img {
+    width: 100%;
+    height: 100%;
+}
+#recent-posts .post-title {
+    float: left;
+    margin: 10px 0;
+    font: bold 14px Roboto,sans-serif;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+}
+#recent-posts .post-meta {
+    float: left;
+    font-size: 13px;
+}
+#related-posts .post-meta span, #related-posts .post-meta span a, #related-posts .post-meta span a:hover  {
+    color: #707070;
+}
+#related-posts .post-label {
+    text-transform: uppercase;
+}
+#related-posts .post-label:before {
+    content: "-";
+    padding: 0 5px;
+}
+#related-posts .loadposts {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #707070;
+    cursor: pointer;
+    padding: 0 0 15px 0;
+    text-transform: uppercase;
+}
 </style>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 </head>
