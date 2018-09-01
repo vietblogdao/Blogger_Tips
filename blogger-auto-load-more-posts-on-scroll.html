@@ -1,0 +1,75 @@
+<html>
+  <title>Blogger Auto Load More Posts On Scroll</title>
+<head>
+<style type='text/css'>
+
+</style>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+</head>
+<body>
+<b:widget id='Blog1' locked='true' title='' type='Blog' version='1'>
+<b:widget-settings>...</b:widget-settings>
+<b:includable id='main' var='top'>
+...
+<b:include cond='data:view.isMultipleItems' name='postPagination'/>
+</b:includable>
+...
+<b:includable id='postPagination'>
+  <b:if cond='data:numPosts gte 7'>
+    <div class='blog-pager'>
+      <a class='older-link' expr:href='data:olderPageUrl' expr:title='data:messages.loadMorePosts'>			    
+      <data:messages.loadMorePosts/>
+      </a>
+  <script>//<![CDATA[
+  (function(a) {
+    function h() {
+        g || (g = !0, d ? (b.find("a").hide(), b.find(".paper-spinner").addClass('spinner'), a.ajax(d, {
+            dataType: "html"
+        }).done(function(c) {
+            var c = a("<div></div>").append(c.replace(j, "")),
+                e = c.find("a.older-link");
+            e ? d = e.attr("href") : (d = "", b.hide());
+            c = c.find(i).children();
+            a(i).append(c);
+            b.find(".paper-spinner").removeClass('spinner');
+            b.find("a").show();
+            g = !1
+        })) : b.hide())
+    }
+    function k() {
+        var a = Math.max(f.height(), l.height(), document.documentElement.clientHeight),
+            b = f.scrollTop() + f.height();
+        250 > a - b && h()
+    }
+    var d = "",
+        b = null,
+        i = ".blog-posts",
+        g = !1,
+        f = a(window),
+        l = a(document),
+        j = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+    a(document).ready(function() {
+        if ("item" != _WidgetManager._GetAllData().blog.pageType && (d = a("a.older-link").attr("href"))) {
+            var e = a('<div class="paper-spinner">');
+            f.scroll(k);
+          b = a('<div id="loading"></div>');
+            b.append(e);
+            b.insertBefore(a(".blog-pager"));
+            a(".blog-pager").addClass('hidden')
+        }
+    })
+    })(jQuery);
+  //]]></script>
+    </div>
+  <b:else/>
+    <div class='loadMorePosts'>  
+      <a class='flat-button' expr:href='data:blog.homepageUrl' expr:title='data:messages.home'>
+        <data:messages.home/>  
+      </a>
+    </div>
+  </b:if>
+</b:includable>
+...
+</b:widget>
+</body>
+</html>
