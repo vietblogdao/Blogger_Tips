@@ -2,7 +2,59 @@
   <title>YouTube Iframe Responsive Width Auto Play And Turn Off The Light Button</title>
 <head>
 <style type='text/css'>
-
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.dim-overlay {
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    background-color: rgb(19,19,19);
+}
+.dim-overlay .turn-on {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    padding: 0;
+    background: url(https://www.blogger.com/img/lightbox/lightbox_sprite.gif) no-repeat;
+    width: 20px;
+    height: 20px;
+    top: 5px;
+    right: 5px;
+    position: absolute;
+    z-index: 100;
+}
+.dim-overlay.hidden {
+    display:none;  
+}
+.centered {
+    position: fixed;
+    z-index: 101;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    max-width: 80%;
+    width: 100%;
+}
+@media (max-width: 1366px) {
+  .centered {
+    max-width: 75%;
+}
+@media (max-width: 800px) {
+  .centered {
+    max-width: 100%;
+}
 </style>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 </head>
@@ -11,6 +63,10 @@
   <div class="video-container">
     <iframe id="player" frameborder="0" allowfullscreen="1" allow="autoplay; encrypted-media" src="https://www.youtube.com/embed/y2mVg68Yjo4?loop=1&controls=1&rel=0fs=1&showinfo=0&cc_load_policy=1&iv_load_policy=3&modestbranding=1&enablejsapi=1"></iframe>
   </div>
+</div>
+<button class='turn-off'></button>
+<div class='dim-overlay hidden'>
+  <button class='turn-on'>
 </div>
 <script>//<![CDATA[
 $('.turn-off').on('click', function() {
