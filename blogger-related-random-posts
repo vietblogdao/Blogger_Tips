@@ -40,12 +40,23 @@ var flag;
 $('#related-posts .more').addClass('hidden')
 $(window).on('load', function() {
   $('.box_category').addClass('spinner').addClass('load')
-  $.getScript('https://www.blogger.com/feeds/' + blogID + '/posts/summary/-/' + labelname + '?alt=json-in-script&max-results=500&callback=relatedposts').done(function() {
-    $('.box_category').removeClass('spinner').removeClass('load')
-    $('#related-posts .more').removeClass('hidden')
+  $.ajax({
+    type: 'GET',
+    url: 'https://www.blogger.com/feeds/' + blogID + '/posts/summary/-/' + labelname,
+    data: {
+    'max-results': 500,
+    'alt': 'json'
+    },
+    dataType: 'jsonp',
+    jsonp: 'callback',
+    jsonpCallback: 'getPosts',
+    success: function() {
+      $('.box_category').removeClass('spinner').removeClass('load') 
+      $('#related-posts .more').removeClass('hidden')
+    }
   })
 })
-function relatedposts(json) {
+function getPosts(json) {
   var totalPost = json.feed.openSearch$totalResults.$t;
   for (i = 0; i < postsnum;) {
     flag = 0;
