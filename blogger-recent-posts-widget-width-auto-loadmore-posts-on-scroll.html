@@ -1,0 +1,182 @@
+<html>
+  <title>Recent Posts Widget Width Auto Loadmore Posts On Scroll</title>
+<head>
+<style type='text/css'>
+#recent-posts ul {
+    position: relative;
+    margin: 0 -7.5px;
+    box-sizing: border-box;
+}
+#recent-posts ul li {
+    padding: 0 7.5px 15px 7.5px;
+    width: 20%;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+#recent-posts ul li a, #recent-posts ul li a:hover {
+    color: #333333;  
+}
+#recent-posts .post-thumb {
+    width: 100%;
+    height: 115px;
+    float: left;
+    overflow: hidden;
+    position: relative;
+}
+#recent-posts .post-thumb img {
+    width: 100%;
+    height: 100%;
+}
+#recent-posts .post-title {
+    float: left;
+    margin: 10px 0;
+    font: bold 14px Roboto,sans-serif;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+}
+#recent-posts .post-meta {
+    float: left;
+    font-size: 13px;
+}
+#related-posts .post-meta span, #related-posts .post-meta span a, #related-posts .post-meta span a:hover  {
+    color: #707070;
+}
+#related-posts .post-label {
+    text-transform: uppercase;
+}
+#related-posts .post-label:before {
+    content: "-";
+    padding: 0 5px;
+}
+#related-posts .loading {
+    position: relative;
+    height: 150px;
+}
+#recent-posts .spinner:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 40%;
+    left: 48%;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid hsl(0,0%,53.3%);
+    border-right-color: transparent;
+    animation: spinner .9s linear infinite;
+    -webkit-animation: spinner .9s ease-in-out infinite;
+}
+@keyframes spinner {
+  to {
+    transform:rotate(360deg);
+  }
+}
+@-webkit-keyframes spinner {
+  to {
+    -webkit-transform:rotate(360deg);
+  }
+}
+#related-posts .hidden {
+    display: none!important;
+}
+</style>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+</head>
+<body>
+<div id='recent-posts'>
+  <ul class='posts'></ul>
+  <input id='numposts' type='hidden' value='0'/>
+  <input id='allposts' type='hidden' value=''/>
+  <div class='loading spinner hidden'>
+</div>
+<script>//<![CDATA[
+function getPosts(e) {
+  if (e.feed.entry) {
+    for (var t = 0; t < e.feed.entry.length; t++) {
+      for (var a = 0; a < e.feed.entry[t].link.length; a++)
+        if ("alternate" == e.feed.entry[t].link[a].rel) {
+          var s = e.feed.entry[t].link[a].href;
+          break
+        }
+      for (var r = 0; r < e.feed.entry[t].category.length; r++) var l = e.feed.entry[t].category[r].term,
+        n = "/search/label/" + l;
+      var i, d = e.feed.entry[t].title.$t,
+        p = e.feed.entry[t].published.$t,
+        c = p.substring(8, 10) + "/" + p.substring(5, 7) + "/" + p.substring(0, 4);
+      try {
+        i = e.feed.entry[t].media$thumbnail.url.replace("default", "mqdefault")
+      } catch (e) {
+        i = "https://4.bp.blogspot.com/-00O66C-eBQs/W0IcokXSnOI/AAAAAAAAL_k/g4KtDm7SkQsoe7_G0vZ_C_nU0Gf_-kyVQCLcBGAs/s1600/safe_image.png"
+      }
+      $("#recent-posts ul").append('<li class="item"><div class="post-thumb"><a href=' + s + ' title="' + d + '"><img src=' + i + ' alt="' + d + '" /><span class="duration_video" title="Play"><span class="play_ico"><i class="fa fa-play" aria-hidden="true"></i></span></span></a></div><h2 class="post-title"><a href=' + s + ' title="' + d + '">' + d + '</a></h2><div class="post-meta"><span class="post-date">' + c + '</span><span class="post-label"><a href="' + n + '" title="' + l + '">' + l + "</a></span></div></li>")
+    }
+  } else {
+    $('#recent-posts').hide()
+  }
+}
+$(window).on('load', function() {
+  var numposts = 10;
+  $.ajax({
+    type: 'GET',
+    url: '/feeds/posts/summary',
+    data: {
+      'max-results': numposts,
+      'alt': 'json'
+    },
+    dataType: 'jsonp',
+    jsonp: 'callback',
+    jsonpCallback: 'getPosts',
+    success: function(e) {
+      var totalposts = e.feed.openSearch$totalResults.$t
+      $('#allposts').attr('value', totalposts)
+      scroll = 1
+      $(window).scroll(function() {
+        var a = $(window).scrollTop(),
+          b = parseInt($(document).height() - $(window).height() - 200)
+        if (a >= b) {
+          if (scroll == 1) {
+            scroll = 0
+            $('.loading').removeClass('hidden')
+            var items = Number($('#numposts').val())
+            items = items + numposts
+            if (items <= totalposts) {
+              setTimeout(function() {
+                $('#numposts').val(items)
+                $.ajax({
+                  type: 'GET',
+                  url: '/feeds/posts/summary',
+                  data: {
+                    'max-results': numposts,
+                    'start-index': items + 1,
+                    'alt': 'json'
+                  },
+                  dataType: 'jsonp',
+                  jsonp: 'callback',
+                  jsonpCallback: 'getPosts',
+                  success: function() {
+                    scroll = 1
+                    var lastposts = items + numposts;
+                    if (lastposts > totalposts) {
+                      $('.loading').addClass('hidden')
+                    }
+                  }
+                })
+              }, 500)
+            } else {
+              $('.loading').addClass('hidden')
+            }
+          }
+        }
+      })
+    }
+  })
+})
+//]]></script>
+</body>
+</html>
