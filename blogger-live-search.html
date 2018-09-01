@@ -1,0 +1,132 @@
+<html>
+  <title>Blogger Live Search</title>
+<head>
+<style type='text/css'>
+#searchForm {
+  display:inline-block;
+  position:relative;
+  width:500px;
+}
+#searchForm input {
+  background:transparent;
+  font-size:14px;
+  line-height:27px;
+  text-indent:14px;
+  width:90%;
+  color:#212121;
+  border:1px solid #e0e0e0;
+  border-right:none;
+  border-radius:2px 0 0 2px;
+  outline:0;
+}
+#searchForm input:hover,
+#searchForm button:hover {
+  border:1px solid #b9b9b9;
+  border-top:1px solid #a0a0a0;
+  -webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+  -moz-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+}
+#searchForm button {
+  width:60px;
+  border:1px solid #e0e0e0;
+  border-radius:0 2px 2px 0;
+  background:rgb(230,230,230);
+  cursor:pointer;
+  position:absolute;
+  top:10px;
+  outline:0;
+  line-height:27px;
+}
+#searchForm button svg {
+  vertical-align:middle;
+  width:21px;
+  height:21px;
+}
+#searchForm .results {
+  position:absolute;
+  top:50px;
+  background:#fff;
+  border:1px solid #e0e0e0;
+  width:90%;
+  min-width:320px;
+  border-top:unset;
+  box-shadow:0 2px 4px rgba(0,0,0,0.2);
+  -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+#searchForm .results li {
+  line-height:list-style:none;
+}
+#searchForm .results li a {
+  display:block;
+  padding:0 15px;
+  color:#212121;
+  font-size:15px;
+  font-weight:500;
+  line-height:30px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#searchForm .results li:hover {
+  background:rgb(230,230,230);
+}
+#searchForm .hidden {
+  display:none!important;
+}
+</style>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+</head>
+<body>
+<form id="search-form" action="/search">
+  <input autocomplete="off" name="q" placeholder="Search" value=""/>
+  <svg class="clear-text hidden"><use xlink:href="/responsive/sprite_v1_6.css.svg#ic_close_black_24dp" xmlns:xlink="http://www.w3.org/1999/xlink"></use></svg>
+  <button type="submit" value="Search"><svg><use xlink:href="/responsive/sprite_v1_6.css.svg#ic_search_black_24dp" xmlns:xlink="http://www.w3.org/1999/xlink"></use></svg></button>
+  <ul class="results hidden"></ul>
+</form>
+<script>//<![CDATA[
+$(window).on('load', function() {
+  $('#searchForm input').on('keyup', function(e) {
+    var textinput = $(this).val()
+    if (textinput) {
+      $.ajax({
+        type: 'GET',
+        url: '/feeds/posts/summary',
+        data: {
+          'max-results': 10,
+          'alt': 'json',
+          'q': textinput
+        },
+        dataType: 'jsonp',
+        success: function(data) {
+          $('.results,.clear-text').removeClass('hidden')
+          $('.results').empty()
+          if (data.feed.entry) {
+            for (var i = 0; i < data.feed.entry.length; i++) {
+              for (var j = 0; j < data.feed.entry[i].link.length; j++) {
+                if (data.feed.entry[i].link[j].rel == 'alternate') {
+                  var postUrl = data.feed.entry[i].link[j].href;
+                  break;
+                }
+              }
+              var postTitle = data.feed.entry[i].title.$t;
+              $('.results').append('<li><a href=' + postUrl + ' title="' + postTitle + '">' + postTitle + '</li>');
+            }
+          } else {
+            $('.results').addClass('hidden')
+          }
+        }
+      })
+    } else {
+      $('.results,.clear-text').addClass('hidden')
+    }
+  })
+  $('.clear-text').click(function() {
+    $('#searchForm input').val('')
+    $('.results,.clear-text').addClass('hidden')
+    $('.results').empty()
+  })
+})
+//]]></script>
+</body>
+</html>
