@@ -2,7 +2,39 @@
   <title>Blogger Auto Load More Posts On Scroll</title>
 <head>
 <style type='text/css'>
-
+#loading {
+    position: relative;
+    text-align: center;
+    height: 150px;
+    display: flex;
+}
+.paper-spinner.spinner:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 42%;
+    left: 48%;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid hsl(0,0%,53.3%);
+    border-right-color: transparent;
+    animation: spinner .9s linear infinite;
+    -webkit-animation: spinner .9s ease-in-out infinite;
+}
+@keyframes spinner {
+  to {
+    transform:rotate(360deg);
+  }
+}
+@-webkit-keyframes spinner {
+  to {
+    -webkit-transform:rotate(360deg);
+  }
+}
+.blog-pager.hidden {
+  display:none!important;
+}
 </style>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 </head>
