@@ -6,21 +6,109 @@
     max-height: 400px;
     overflow: auto;
 }
+.recent-comments.load {
+    height: 400px;
+    position: relative;
+}
+.spinner:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid hsl(0,0%,53.3%);
+    border-right-color: transparent;
+    animation: spinner .9s linear infinite;
+    -webkit-animation: spinner .9s ease-in-out infinite;
+}
+@keyframes spinner {
+  to {
+    transform:rotate(360deg);
+  }
+}
+@-webkit-keyframes spinner {
+  to {
+    -webkit-transform:rotate(360deg);
+  }
+}
+.recent-comments ul {
+    margin: 0;
+    padding: 0;
+}
 .recent-comments li {
     list-style-type: none;
     position: relative;
     padding: 0 0 15px 0;
 }
-#rc .rc_avatar, .recent-comments .rc_avatar {
+.recent-comments .rc_avatar {
     position: absolute;
     border-radius: 50%;
     height: 40px;
     width: 40px;
     overflow: hidden;
 }
-#rc .rc_avatar img, .recent-comments .rc_avatar img {
+.recent-comments .rc_avatar img {
     width: 100%;
     height: 100%;
+}
+.recent-comments .rc_block {
+    background: rgb(230,230,230);
+    padding: 10px;
+    margin: 0 0 0 50px;
+    border: 1px solid rgb(230,230,230);
+    border-radius: 2px;
+    display: block;
+    font-size: 15px;
+    line-height: 1.6;
+}
+.recent-comments .rc_block:before {
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 0;
+    left: -18px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: rgb(230,230,230) rgb(230,230,230) transparent transparent;
+    display: block;
+    margin-left: 55px;
+}
+.recent-comments .rc_header {
+    overflow: hidden;
+    white-space: nowrap;
+}
+.recent-comments .rc_user {
+    font-size: 15px;
+}
+.recent-comments .rc_user a {
+    color: #212121;
+}
+.recent-comments .rc_date {
+    font-size: 13px;
+    padding-left: 7px;
+}
+.recent-comments .rc_date a {
+    color: #777;
+}
+.recent-comments .rc_content {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.recent-comments .loading {
+    position: relative;
+    height: 100px;
+}
+.recent-comments .loading.hidden {
+    display: none;
+}
+.recent-comments .spinner:before {
+    top:30%;
 }
 </style>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
