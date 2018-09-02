@@ -183,7 +183,7 @@ $(window).on('load', function() {
 })
 
 function getComments(e) {
-  if (e.feed.entry)
+  if (e.feed.entry) {
     for (var t = 0; t < e.feed.entry.length; t++) {
       for (var r = 0; r < e.feed.entry[t].link.length; r++)
         if ("alternate" == e.feed.entry[t].link[r].rel) {
